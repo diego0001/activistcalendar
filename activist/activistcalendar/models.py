@@ -47,13 +47,17 @@ class Group (models.Model):
     group_email = models.EmailField()
     group_mission_statement = models.TextField()
     group_description = models.TextField()
-    group_volunteers = models.TextField()    
+    group_volunteers = models.TextField()
+
+class EventType(models.Model):
+    type_name = models.CharField (max_length=255)
 
 class Event (models.Model):
     event_name = models.CharField (max_length=255)
     event_type = models.CharField (max_length=255)
     event_creator = models.ForeignKey(User, related_name="event_creator_user")
     event_host = models.ForeignKey(User, related_name="event_host_user")
+    event_type = models.ForeignKey(EventType)
     event_time = models.TimeField()
     event_date = models.DateField()
     group = models.ForeignKey(Group)
