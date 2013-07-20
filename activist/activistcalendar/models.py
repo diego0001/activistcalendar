@@ -1,5 +1,6 @@
 from django.db import models
 from django import forms
+from django.contrib.auth import models as authmodels
 
 class AvatarPicture(models.Model):
     location = models.FileField(upload_to='user_pictures/')
@@ -21,11 +22,9 @@ class PhotoLink (models.Model):
 class Interest(models.Model):
     interest = models.TextField()
 
-class ActivistUser (models.User):
+class ActivistUser (authmodels.User):
     nickname = models.CharField(max_length=2048, unique=True)
-    first_name = models.CharField (max_length=2048)
     middle_name = models.CharField (max_length=2048)
-    last_name = models.CharField (max_length=2048)
     region = models.TextField()
     address = models.TextField()
     time_created = models.DateField(auto_now=True, auto_now_add=True)
@@ -86,7 +85,6 @@ class Event (models.Model):
     event_title = models.CharField(max_length=2048)
     event_purpose = models.TextField()
     description = models.TextField()
-    permissions = models.ForeignKey(ActivistPermissions)
     volunteers = models.ForeignKey(ActivistUser, related_name="volunteers")
 
 class GroupEvent(models.Model):
@@ -117,3 +115,4 @@ class EventMedia(models.Model):
 class EventPhotos(models.Model):
     event = models.ForeignKey(Event)
     photo = models.ForeignKey(PhotoLink)
+    
