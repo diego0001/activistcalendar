@@ -115,4 +115,3 @@ class EventMedia(models.Model):
 class EventPhotos(models.Model):
     event = models.ForeignKey(Event)
     photo = models.ForeignKey(PhotoLink)
-    
