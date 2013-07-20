@@ -7,32 +7,33 @@ class Medium (models.Model):
     location = models.FileField(upload_to='media/')
 
 class MediumLink (models.Model):
-    media_type = models.CharField(max_length=255)
+    media_type = models.CharField(max_length=2048)
     media = models.ForeignKey(Medium)
 
 class Photo (models.Model):
     location = models.FileField(upload_to='photos/')
 
 class PhotoLink (models.Model):
-    photo_type = models.CharField (max_length=255)
+    photo_type = models.CharField (max_length=2048)
     photo = models.ForeignKey(Photo)
 
 class Interest(models.Model):
     interest = models.TextField()
 
 class User (models.Model):
-    login = models.CharField (max_length=255)
-    password = models.CharField(max_length=255)
-    prefix = models.CharField (max_length=255)
-    first_name = models.CharField (max_length=255)
-    middle_name = models.CharField (max_length=255)
-    last_name = models.CharField (max_length=255)
-    suffix = models.CharField (max_length=255)
-    nick_name = models.CharField (max_length=255)
+    email = models.EmailField(max_length=2048)
+    nickname = models.CharField(max_length=2048)
+    password = models.CharField(max_length=2048)
+    prefix = models.CharField (max_length=2048)
+    first_name = models.CharField (max_length=2048)
+    middle_name = models.CharField (max_length=2048)
+    last_name = models.CharField (max_length=2048)
+    suffix = models.CharField (max_length=2048)
+    nick_name = models.CharField (max_length=2048)
     region = models.TextField()
     address = models.TextField()
     time_created = models.DateField(auto_now=True, auto_now_add=True)
-    last_updated = models.DateField(auto_now=True)
+    last_updated = models.DateField(auto_now=True, auto_now_add=True)
     profile = models.TextField()
     avatar_picture = models.ForeignKey(AvatarPicture)
 
@@ -49,14 +50,14 @@ class UserPhotos (models.Model):
     photos = models.ForeignKey(PhotoLink)
 
 class Group (models.Model):
-    group_name = models.CharField (max_length=255)
-    group_type = models.CharField (max_length=255)
+    group_name = models.CharField (max_length=2048)
+    group_type = models.CharField (max_length=2048)
     group_creator = models.ForeignKey(User, related_name = 'group_creator')
     group_location = models.TextField()
     group_region = models.TextField()
     group_address = models.TextField()
     group_site = models.URLField()
-    group_phone = models.CharField(max_length=255)
+    group_phone = models.CharField(max_length=2048)
     group_email = models.EmailField()
     group_mission_statement = models.TextField()
     group_description = models.TextField()
@@ -74,11 +75,11 @@ class UserGroup (models.Model):
     group = models.ForeignKey(Group)
 
 class EventType(models.Model):
-    type_name = models.CharField (max_length=255)
+    type_name = models.CharField (max_length=2048)
 
 class Event (models.Model):
-    event_name = models.CharField (max_length=255)
-    event_type = models.CharField (max_length=255)
+    event_name = models.CharField (max_length=2048)
+    event_type = models.CharField (max_length=2048)
     event_creator = models.ForeignKey(User, related_name="event_creator_user")
     event_host = models.ForeignKey(User, related_name="event_host_user")
     event_type = models.ForeignKey(EventType)
@@ -125,7 +126,7 @@ class EventPhotos(models.Model):
 
     
 class Promotion(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=2048)
     summary = models.TextField()
     profile = models.URLField()
 
