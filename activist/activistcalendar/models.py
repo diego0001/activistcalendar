@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 
 class AvatarPicture(models.Model):
     location = models.FileField(upload_to='user_pictures/')
