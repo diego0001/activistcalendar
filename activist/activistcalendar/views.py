@@ -1,52 +1,81 @@
 from django.template import Context, loader
 from django.http import Http404
-from activistcalendar.models import User, Group, Event, Promotions, Priv
-from activistcalendar.models import UserGroup, UserEvent, EventType
+from django.shortcuts import render_to_response
+from activistcalendar.models import ActivistProfile, ActivistGroup, ActivistInterest, ActivistEvent
 
-def userprofile(request, user_id):
+def activist_profile(input_profile_id):
     try:
-        user = User.objects.get(pk=user_id)
-        groups = [usergroup.objects.group for usergroup in UserGroup(user=user)]
-        interests = [userinterest.objects.interest for userinterest in UserInterest(user=user)]
-        media = [usermedia.objects.media for usermedia in UserMedia(user=user)]
-        photos = [userphotos.objects.photos for userphotos in UserPhotos(user=user)]
-    except User.DoesNotExist:
+        profile = ActivistProfile.objects.get(user_id=input_profile_id)
+    except ActivistProfile.DoesNotExist:
         raise Http404
-    return render_to_response('views/personalprofile.html', {'user': user, 'groups': groups, 'interests': interests, 'media': media, 'photos': photos})
+    return render_to_response('views/profile.html', {'profile': profile})
 
-def groupprofile(request, group_id):
-    try:
-        group = Group.objects.get(pk=group_id)
-        administrators = [administratorgroup.objects.user for \
-                              administratorgroup in AdministratorGroup(group=group)]
-        events = [groupevent.objects.event for groupevent in GroupEvent(group=group)]
-        media = [groupmedia.objects.media for groupmedia in GroupMedia(group=group)]
-        photos = [groupphotos.objects.photos for groupphotos in GroupPhotos(group=group)]
-    except Group.DoesNotExist:
-        raise Http404
-    return render_to_response('views/groupprofile.html', {'group': group, 'administrators': administrators, 
-                                                          'events': events, 'media': media, 'photos': photos})
 
-def eventprofile(request, event_id):
+def activist_profile_groups(input_profile_id):
     try:
-        event = Event.objects.get(pk=event_id)
-        group_sponsors = [groupevent.objects.group for groupevent in GroupEvent(event=event)]
-        guests = [guestlist.objects.user for guestlist in GuestList(event=event)]
-        media = [eventmedia.objects.media for eventmedia in EventMedia(event=event)]
-        photos = [eventphotos.objects.photos for eventphotos in EventPhotos(event=event)]
-    except Event.DoesNotExist:
+        profile = ActivistProfile.objects.get(user_id=input_profile_id)
+        groups = profile.groups.all()
+    except ActivistProfile.DoesNotExist:
         raise Http404
-    return render_to_response('views/eventprofile.html', {'event': event, 'group_sponsors': group_sponsors,
-                                                          'guests': guests, 'media': media, 'photos': photos})
+    return render_to_response('views/profile_groups.html', {'groups': groups})
 
-def promotionprofile(request, promotion_id):
+def activist_profile_events(input_profile_id):
     try:
-        promotion = Event.objects.get(pk=promotion_id)
-        users = [userpromotion.objects.user for userpromotion in UserPromotion(promotion=promotion)]
-        groups = [grouppromotion.objects.group for grouppromotion in GroupPromotion(promotion=promotion)]
-        media = [promotionmedia.objects.media for promotionmedia in PromotionMedia(promotion=promotion)]
-        photos = [promotionphotos.objects.photos for promotionphotos in PromotionPhotos(promotion=promotion)]
-    except Promotion.DoesNotExist:
+        profile = ActivistProfile.objects.get(user_id=input_profile_id)
+        events = profile.events.all()
+    except ActivistProfile.DoesNotExist:
         raise Http404
-    return render_to_response('views/promotionprofile.html', {'promotion': promotion, 'users': users, 
-                                                              'groups': groups, 'media': media, 'photos': photos})
+    return render_to_response('views/profile_events.html', {'events': events})
+
+def activist_profile_interests(input_profile_id):
+    try:
+        profile = ActivistProfile.objects.get(user_id=input_profile_id)
+        interests = profile.interests.all()
+    except ActivistProfile.DoesNotExist:
+        raise Http404
+    return render_to_response('views/profile_interests.html', {'interests': interests})
+
+def activist_group(input_group_id):
+    try:
+        group = ActivistGroup.objects.get(user_id=input_group_id)
+    except ActivistGroup.DoesNotExist:
+        raise Http404
+    return render_to_response('views/group.html', {'group': group})
+
+def activist_group_events(input_group_id):
+    try:
+        group = ActivistGroup.objects.get(user_id=input_group_id)
+        events = group.event_set.all()
+    except ActivistGroup.DoesNotExist:
+        raise Http404
+    return render_to_response('views/events.html', {'events': events})
+
+def activist_event(input_event_id):
+    try:
+        event = ActivistEvent.objects.get(user_id=input_event_id)
+    except ActivistEvent.DoesNotExist:
+        raise Http404
+    return render_to_response('views/event.html', {'event': event})
+
+def activist_event_group(input_event_id):
+    try:
+        event = ActivistEvent.objects.get(user_id=input_event_id)
+        group = event.group
+    except ActivistEvent.DoesNotExist:
+        raise Http404
+    return render_to_response('views/group.html', {'group': group})
+
+def activist_interest(input_interest_id):
+    try:
+        interest = ActivistInterest.objects.get(user_id=input_interest_id)
+    except ActivistInterest.DoesNotExist:
+        raise Http404
+    return render_to_response('views/interest.html', {'interest': interest})
+
+def activist_interest_profiles(input_interest_id):
+    try:
+        interest = ActivistInterest.objects.get(user_id=input_interest_id)
+        profiles = interest.profiles.all()
+    except ActivistInterest.DoesNotExist:
+        raise Http404
+    return render_to_response('views/interest_profiles.html', {'profiles': profiles})
