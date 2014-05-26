@@ -31,6 +31,8 @@ class ActivistEvent(models.Model):
     contact_email = models.EmailField(max_length=2048)
     event_url = models.URLField()
     description = models.TextField()
+        
+        
 
 class Profile(authmodels.User):
     user_id = UUIDField(auto=True, unique=True)

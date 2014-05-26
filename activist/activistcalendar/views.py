@@ -1,6 +1,7 @@
 from django.template import Context, loader
 from django.http import Http404
 from django.shortcuts import render_to_response
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from activistcalendar.models import ActivistProfile, ActivistGroup, ActivistInterest, ActivistEvent
 
 def activist_profile(input_profile_id):
@@ -49,6 +50,31 @@ def activist_group_events(input_group_id):
     except ActivistGroup.DoesNotExist:
         raise Http404
     return render_to_response('views/events.html', {'events': events})
+
+def create_activist_event(input_group_id, inputdate, inputtime, inputaddress1, inputaddress2,
+                          inputcity, inputprovince, inputcountry, inputcontact_email, inputevent_url,
+                          inputdescription):
+    try:
+        group = ActivistGroup.objects.get(user_id=input_group_id)
+        event = ActivistEvent(host_group=group, date=inputdate, time=inputtime, 
+                              address_line1=inputaddress1, address_line2=inputaddress2,
+                              city=inputcity, province=inputprovince, country=inputcountry,
+                              contact_email=inputcontact_email, event_url=inputevent_url, 
+                              description=inputdescription)
+        event.save()
+        return event
+    except ValidationError as e:
+        non_field_errors = e.message_dict[NON_FIELD_ERRORS]
+        return None
+
+def delete_activist_event(input_event_id):
+    try:
+        event = ActivistEvent.objects.get(user_id=input_event_id)
+        event.delete()
+        return True
+    except ActivistEvent.DoesNotExist:
+        raise Http404
+    return False
 
 def activist_event(input_event_id):
     try:
