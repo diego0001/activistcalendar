@@ -62,19 +62,19 @@ def create_activist_event(input_group_id, inputdate, inputtime, inputaddress1, i
                               contact_email=inputcontact_email, event_url=inputevent_url, 
                               description=inputdescription)
         event.save()
-        return event
+        return render_to_response('views/events.html', {'events': [event]})
     except ValidationError as e:
         non_field_errors = e.message_dict[NON_FIELD_ERRORS]
-        return None
+        return render_to_response('views/events.html', {'events': None})
 
 def delete_activist_event(input_event_id):
     try:
         event = ActivistEvent.objects.get(user_id=input_event_id)
         event.delete()
-        return True
+        return render_to_response('views/event_deleted.html', {'event_id': input_event_id})
     except ActivistEvent.DoesNotExist:
         raise Http404
-    return False
+    return render_to_response('views/event_deleted_failed.html', {'event_id': input_event_id})
 
 def activist_event(input_event_id):
     try:
