@@ -1,0 +1,12 @@
+Requirements for activist calendar project.
+
+1. PostgreSQL 9.3.2
+2. psycopg2
+3. Python2.7
+4. Django 1.6.2
+
+To install: install Postgresql, create a user named postgres, then create the
+activist database. Install psycopg2, Python2.7 and Django 1.6.2. Go to the /activistcalendar/activist folder and run this:
+	 python manage.py syncdb
+
+Once this is installed, the database should build correctly.
